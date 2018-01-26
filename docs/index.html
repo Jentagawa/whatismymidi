@@ -28,7 +28,22 @@
                 };
 
                 return list;
-            };         
+            }; 
+
+            //Get the available devices.
+            outputs = getDevices(MIDI.outputs.values());
+            inputs = getDevices(MIDI.inputs.values());
+
+            console.log("Outputs:", outputs, "Inputs:", inputs);
+
+            for (devices in outputs) {
+
+                var option = document.createElement("option");
+                option.text = outputs[devices].name;
+                document.getElementById('list').add(option);
+
+            };
+
         };
 
         var failure = function() {
