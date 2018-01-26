@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>デバイス名は何だ！？</title>
+</head>
+
+<body>
+    <script>
+    var selectedDevice = {};
+    var outputs, inputs;
+
+    //Get MIDI devices
+
+    if (navigator.requestMIDIAccess) {
+        console.log("MIDI STARTED");
+
+        var success = function(MIDI) {
+            console.log(MIDI);
+
+            var getDevices = function(devices) {
+
+                var list = {};
+
+                for (var i = devices.next(); i && !i.done; i = devices.next()) {
+                    list[i.value.name] = i.value;
+                };
+
+                return list;
+            };         
+        };
+
+        var failure = function() {
+            console.error("MIDI error")
+        };
+
+        navigator.requestMIDIAccess().then(success, failure);
+
+    }
+
+
+    //Change MIDI device
+
+    var changeDevice = function(name) {
+
+        //Merge input and output of same device into single object
+        selectedDevice.output = outputs[name];
+        selectedDevice.input = inputs[name];
+
+
+        //Start listening for received notes
+        selectedDevice.input.onmidimessage = addListener;
+    };
+
+    </script>
+    <!--HTML LAYOUT-->
+    <style>
+    
+    </style>
+    <div>
+        <p>接続されているデバイス</p>
+        <select id="list" onchange="changeDevice(this.value)"></select>
+    </div>
+</body>
+
+</html>
